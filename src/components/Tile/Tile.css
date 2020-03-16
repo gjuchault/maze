@@ -1,0 +1,27 @@
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  width: 20px;
+}
+
+.tile.visiting {
+  background-color: #ff8081;
+}
+
+.tile.visited {
+  background-color: #ffe5e6;
+}
+
+.tile.wall {
+  background-color: #222;
+}
+
+.tile.entrance {
+  background-color: #ff4d4f;
+}
+
+.tile.exit {
+  background-color: #73d13d;
+}
