@@ -1,16 +1,16 @@
-import { Maze } from './index'
+import { Maze, Facing } from './index'
 
-interface Human {
+interface Explorer {
   x: number
   y: number
-  facing: 'north' | 'east' | 'south' | 'west'
-  history: { x: number; y: number }[]
+  facing: Facing
+  history: { x: number; y: number; facing: Facing }[]
 }
 
 export function leftWall(maze: Maze) {
   const { entrypoint } = maze
 
-  let human: Human = {
+  let explorer: Explorer = {
     x: entrypoint.x,
     y: entrypoint.y,
     facing: 'south',
@@ -19,46 +19,55 @@ export function leftWall(maze: Maze) {
 
   let i = 0
   while (1) {
-    human.history.push({ x: human.x, y: human.y })
+    explorer.history.push({
+      x: explorer.x,
+      y: explorer.y,
+      facing: explorer.facing
+    })
 
-    const cell = maze.getCell(human.x, human.y)
+    const cell = maze.getCell(explorer.x, explorer.y)
 
     if (cell.isExit) {
       break
     }
 
-    const siblings = maze.getSiblings(human.x, human.y)
+    const siblings = maze.getSiblings(explorer.x, explorer.y)
 
-    const hisLeft = getLeft(human.facing)
-    const hisRight = getRight(human.facing)
-    const hisBack = getBack(human.facing)
+    const hisLeft = getLeft(explorer.facing)
+    const hisRight = getRight(explorer.facing)
+    const hisBack = getBack(explorer.facing)
 
     if (!siblings[hisLeft].isWall) {
-      human.facing = hisLeft
-    } else if (!siblings[human.facing].isWall) {
-      // human.facing = human.facing
+      explorer.facing = hisLeft
+    } else if (!siblings[explorer.facing].isWall) {
+      // explorer.facing = explorer.facing
     } else if (!siblings[hisRight].isWall) {
-      human.facing = hisRight
+      explorer.facing = hisRight
     } else {
-      human.facing = hisBack
+      explorer.facing = hisBack
     }
 
-    if (human.facing === 'north') human = { ...human, y: human.y - 1 }
-    if (human.facing === 'east') human = { ...human, x: human.x + 1 }
-    if (human.facing === 'south') human = { ...human, y: human.y + 1 }
-    if (human.facing === 'west') human = { ...human, x: human.x - 1 }
+    if (explorer.facing === 'north')
+      explorer = { ...explorer, y: explorer.y - 1 }
+    else if (explorer.facing === 'east')
+      explorer = { ...explorer, x: explorer.x + 1 }
+    else if (explorer.facing === 'south')
+      explorer = { ...explorer, y: explorer.y + 1 }
+    else explorer = { ...explorer, x: explorer.x - 1 }
 
     i += 1
 
-    if (i === 300) {
+    if (i === 3000) {
       break
     }
   }
 
-  return human
+  console.log(explorer.history)
+
+  return explorer
 }
 
-function getLeft(facing: Human['facing']): Human['facing'] {
+function getLeft(facing: Facing): Facing {
   switch (facing) {
     case 'north':
       return 'west'
@@ -71,7 +80,7 @@ function getLeft(facing: Human['facing']): Human['facing'] {
   }
 }
 
-function getRight(facing: Human['facing']): Human['facing'] {
+function getRight(facing: Facing): Facing {
   switch (facing) {
     case 'north':
       return 'east'
@@ -84,7 +93,7 @@ function getRight(facing: Human['facing']): Human['facing'] {
   }
 }
 
-function getBack(facing: Human['facing']): Human['facing'] {
+function getBack(facing: Facing): Facing {
   switch (facing) {
     case 'north':
       return 'south'

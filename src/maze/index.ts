@@ -33,6 +33,8 @@ export interface Cell {
   }
 }
 
+export type Facing = 'north' | 'east' | 'south' | 'west'
+
 type Character = '#' | '.' | 'I' | 'O'
 
 export function createMazeFromString(rawInput: string): Maze {

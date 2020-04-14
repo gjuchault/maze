@@ -8,3 +8,11 @@
   background-color: #faf9f9;
   text-align: center;
 }
+
+.settings {
+  margin: 16px 0;
+}
+
+.settings > h4 {
+  margin: 0;
+}

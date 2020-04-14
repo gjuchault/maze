@@ -6,7 +6,8 @@
   width: 20px;
 }
 
-.tile.visiting {
+.tile.visiting,
+.tile.visiting.visited {
   background-color: #ff8081;
 }
 
@@ -24,4 +25,24 @@
 
 .tile.exit {
   background-color: #73d13d;
+}
+
+.tile .arrow {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tile .arrow.south {
+  transform: rotate(-90deg);
+}
+
+.tile .arrow.east {
+  transform: rotate(-180deg);
+}
+
+.tile .arrow.north {
+  transform: rotate(-270deg);
 }
