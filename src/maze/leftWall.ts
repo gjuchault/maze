@@ -32,10 +32,11 @@ export function leftWall(maze: Maze) {
     }
 
     const siblings = maze.getSiblings(explorer.x, explorer.y)
+    const facing = explorer.facing
 
-    const hisLeft = getLeft(explorer.facing)
-    const hisRight = getRight(explorer.facing)
-    const hisBack = getBack(explorer.facing)
+    const hisLeft = getLeft(facing)
+    const hisRight = getRight(facing)
+    const hisBack = getBack(facing)
 
     if (!siblings[hisLeft].isWall) {
       explorer.facing = hisLeft
@@ -45,6 +46,15 @@ export function leftWall(maze: Maze) {
       explorer.facing = hisRight
     } else {
       explorer.facing = hisBack
+    }
+
+    // push the "turning" step in history
+    if (explorer.facing !== facing) {
+      explorer.history.push({
+        x: explorer.x,
+        y: explorer.y,
+        facing: explorer.facing
+      })
     }
 
     if (explorer.facing === 'north')

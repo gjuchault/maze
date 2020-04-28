@@ -14,16 +14,18 @@ interface Props {
 export function MazeView({ maze: initialMaze }: Props) {
   let timeout = useRef(0)
   let currentIndex = useRef(0)
-  let human = useRef(leftWall(initialMaze))
+  let human = useRef<ReturnType<typeof leftWall> | undefined>()
   let [maze, setMaze] = useState(initialMaze)
   let [facing, setFacing] = useState<Facing | null>(null)
   const speed = useSpeed()
 
   useEffect(() => {
-    console.log(human.current.history)
-  }, [])
+    human.current = leftWall(initialMaze)
+  }, [initialMaze])
 
   const updateMaze = useCallback(() => {
+    if (!human.current) return
+
     if (!human.current.history[currentIndex.current]) {
       window.clearTimeout(timeout.current)
       return
@@ -57,7 +59,7 @@ export function MazeView({ maze: initialMaze }: Props) {
     })
 
     currentIndex.current += 1
-  }, [speed])
+  }, [speed, human])
 
   useEffect(() => {
     timeout.current = window.setTimeout(updateMaze, 500)
