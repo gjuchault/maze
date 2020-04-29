@@ -13,6 +13,7 @@ export interface Maze {
     south: Cell
     west: Cell
   }
+  resolve: (resolver: Resolver) => Explorer[][]
 }
 
 export interface Cell {
@@ -21,7 +22,6 @@ export interface Cell {
   y: number
   character: Character
   visited: number
-  visiting: boolean
   isExit: boolean
   isEntrance: boolean
   isWall: boolean
@@ -33,7 +33,15 @@ export interface Cell {
   }
 }
 
+export interface Explorer {
+  x: number
+  y: number
+  facing: Facing
+}
+
 export type Facing = 'north' | 'east' | 'south' | 'west'
+
+export type Resolver = (maze: Maze) => Explorer[][]
 
 type Character = '#' | '.' | 'I' | 'O'
 
@@ -56,6 +64,14 @@ export function createMazeFromString(rawInput: string): Maze {
     })
   })
 
+  const maze = {
+    cells,
+    entrypoint,
+    getCell,
+    getSiblings,
+    resolve
+  }
+
   function getCell(x: number, y: number) {
     return (cells[y] || [])[x] || undefined
   }
@@ -69,12 +85,11 @@ export function createMazeFromString(rawInput: string): Maze {
     }
   }
 
-  return {
-    cells,
-    entrypoint,
-    getCell,
-    getSiblings
+  function resolve(resolver: Resolver) {
+    return resolver(maze)
   }
+
+  return maze
 }
 
 function getCellFromCharacter(

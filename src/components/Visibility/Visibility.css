@@ -1,0 +1,12 @@
+.visibility {
+  margin: 4px;
+}
+
+.visibility__label {
+  display: flex;
+  align-items: center;
+}
+
+.Visibility__select {
+  margin-left: 8px;
+}

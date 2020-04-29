@@ -1,11 +1,4 @@
-import { Maze, Facing } from './index'
-
-interface Explorer {
-  x: number
-  y: number
-  facing: Facing
-  history: { x: number; y: number; facing: Facing }[]
-}
+import { Maze, Facing, Explorer } from './index'
 
 export function leftWall(maze: Maze) {
   const { entrypoint } = maze
@@ -13,13 +6,13 @@ export function leftWall(maze: Maze) {
   let explorer: Explorer = {
     x: entrypoint.x,
     y: entrypoint.y,
-    facing: 'south',
-    history: []
+    facing: 'south'
   }
 
-  let i = 0
+  const history: Explorer[] = []
+
   while (1) {
-    explorer.history.push({
+    history.push({
       x: explorer.x,
       y: explorer.y,
       facing: explorer.facing
@@ -39,18 +32,18 @@ export function leftWall(maze: Maze) {
     const hisBack = getBack(facing)
 
     if (!siblings[hisLeft].isWall) {
-      explorer.facing = hisLeft
+      explorer = { ...explorer, facing: hisLeft }
     } else if (!siblings[explorer.facing].isWall) {
-      // explorer.facing = explorer.facing
+      // explorer = { ...explorer, facing: explorer.facing }
     } else if (!siblings[hisRight].isWall) {
-      explorer.facing = hisRight
+      explorer = { ...explorer, facing: hisRight }
     } else {
-      explorer.facing = hisBack
+      explorer = { ...explorer, facing: hisBack }
     }
 
     // push the "turning" step in history
     if (explorer.facing !== facing) {
-      explorer.history.push({
+      history.push({
         x: explorer.x,
         y: explorer.y,
         facing: explorer.facing
@@ -64,17 +57,9 @@ export function leftWall(maze: Maze) {
     else if (explorer.facing === 'south')
       explorer = { ...explorer, y: explorer.y + 1 }
     else explorer = { ...explorer, x: explorer.x - 1 }
-
-    i += 1
-
-    if (i === 3000) {
-      break
-    }
   }
 
-  console.log(explorer.history)
-
-  return explorer
+  return [history]
 }
 
 function getLeft(facing: Facing): Facing {
